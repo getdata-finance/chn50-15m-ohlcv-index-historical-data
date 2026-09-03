@@ -4,7 +4,7 @@
 
 ### -> [**Download the full CHN50 dataset on getdata.finance**](https://getdata.finance/datasets/chn50)
 
-**CHN50 15m OHLCV index historical data** — ultra high-quality 15m OHLCV for **FTSE China A50**. Clean `time, open, high, low, close, volume` CSV for backtesting, algorithmic trading and quantitative research.
+**CHN50 15m OHLCV index historical data** — ultra high-quality 15m OHLCV for **FTSE China A50**. Clean `datetime, open, high, low, close, volume` CSV for backtesting, algorithmic trading and quantitative research.
 
 ## Table of contents
 
@@ -22,7 +22,7 @@
 ## Why this dataset?
 
 - **Ultra high-quality 15m OHLCV** for **FTSE China A50** (Index)
-- **Clean CSV schema** — `time, open, high, low, close, volume` (no gaps in formatting)
+- **Clean CSV schema** — `datetime, open, high, low, close, volume` (no gaps in formatting)
 - **Free evaluation sample** on GitHub (`15m`) · **11 timeframes** on [getdata.finance](https://getdata.finance/datasets/chn50) · **180,253** `15m` rows in the full archive
 - Built for **backtesting**, **algorithmic trading** and **quantitative finance** workflows
 - **Weekly refresh** — [getdata.finance](https://getdata.finance) every **Saturday, 8am UTC+0**; GitHub `15m` sample updated in sync
@@ -73,7 +73,7 @@ First and latest rows from the GitHub sample **`CHN50_15m.csv`**:
 
 **First rows**
 
-| time | open | high | low | close | volume |
+| datetime | open | high | low | close | volume |
 | --- | --- | --- | --- | --- | --- |
 | 2026-06-26T02:00:00+00:00 | 15571.03 | 15580.04 | 15475.02 | 15501.54 | 10809 |
 | 2026-06-26T02:15:00+00:00 | 15501.54 | 15510.53 | 15388.53 | 15393.54 | 8664 |
@@ -83,7 +83,7 @@ First and latest rows from the GitHub sample **`CHN50_15m.csv`**:
 
 **Last rows**
 
-| time | open | high | low | close | volume |
+| datetime | open | high | low | close | volume |
 | --- | --- | --- | --- | --- | --- |
 | 2026-09-02T01:00:00+00:00 | 14735 | 14735 | 14682.5 | 14691 | 474 |
 | 2026-09-02T01:15:00+00:00 | 14691 | 14713.01 | 14666 | 14699.01 | 1195 |
@@ -95,7 +95,7 @@ First and latest rows from the GitHub sample **`CHN50_15m.csv`**:
 
 | Column | Description |
 | --- | --- |
-| `time` | Bar open timestamp (UTC, ISO-8601). |
+| `datetime` | Bar open timestamp (UTC, ISO-8601). |
 | `open` | Opening price of the candlestick bar. |
 | `high` | Highest price during the bar. |
 | `low` | Lowest price during the bar. |
@@ -103,7 +103,7 @@ First and latest rows from the GitHub sample **`CHN50_15m.csv`**:
 | `volume` | Tick volume (number of price updates) during the bar. |
 
 ```text
-time,open,high,low,close,volume
+datetime,open,high,low,close,volume
 ```
 
 ## Code examples
@@ -113,8 +113,8 @@ time,open,high,low,close,volume
 ```python
 import pandas as pd
 
-df = pd.read_csv('CHN50_15m.csv', parse_dates=['time'])
-df.set_index('time', inplace=True)
+df = pd.read_csv('CHN50_15m.csv', parse_dates=['datetime'])
+df.set_index('datetime', inplace=True)
 print(df.describe())
 ```
 
@@ -124,8 +124,8 @@ print(df.describe())
 import backtrader as bt
 import pandas as pd
 
-df = pd.read_csv('CHN50_15m.csv', parse_dates=['time'])
-df.set_index('time', inplace=True)
+df = pd.read_csv('CHN50_15m.csv', parse_dates=['datetime'])
+df.set_index('datetime', inplace=True)
 
 class PandasData(bt.feeds.PandasData):
     params = (('datetime', None), ('open', 'open'), ('high', 'high'),
@@ -143,8 +143,8 @@ cerebro.adddata(PandasData(dataname=df))
 import pandas as pd
 import vectorbt as vbt
 
-df = pd.read_csv('CHN50_15m.csv', parse_dates=['time'])
-close = df.set_index('time')['close']
+df = pd.read_csv('CHN50_15m.csv', parse_dates=['datetime'])
+close = df.set_index('datetime')['close']
 fast, slow = vbt.MA.run(close, 10), vbt.MA.run(close, 50)
 entries = fast.ma_crossed_above(slow)
 exits = fast.ma_crossed_below(slow)
